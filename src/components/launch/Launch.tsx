@@ -1,5 +1,5 @@
-import { ILaunch } from "../../store/slices/launches/types";
-import style from "./style.module.scss";
+import { ILaunch } from '../../store/slices/launches/types';
+import style from './style.module.scss';
 
 interface LaunchProps {
   launch: ILaunch;

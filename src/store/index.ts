@@ -1,12 +1,11 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import launchesReducer from "./slices/launches";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import launchesReducer from './slices/launches';
 
 export const store = configureStore({
   reducer: {
     launches: launchesReducer,
   },
-  middleware: (getDefaultMiddleWare) =>
-    getDefaultMiddleWare({ serializableCheck: false }),
+  middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({ serializableCheck: false }),
 });
 
 export type AppDispatch = typeof store.dispatch;

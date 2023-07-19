@@ -1,5 +1,5 @@
-import ListLaunches from "../components/listLaunches/ListLaunches";
-import style from "./style.module.scss";
+import ListLaunches from '../components/listLaunches/ListLaunches';
+import style from './style.module.scss';
 
 const MainPage = () => {
   return (

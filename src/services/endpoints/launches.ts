@@ -1,8 +1,7 @@
-import axios from "axios";
-import { ILaunch } from "store/slices/launches/types";
+import axios from 'axios';
 
 const endpoints = {
-  getLaunches: () => axios.get("https://api.spacexdata.com/v5/launches"),
+  getLaunches: () => axios.get('https://api.spacexdata.com/v5/launches'),
 };
 
 export default endpoints;

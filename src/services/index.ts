@@ -1,4 +1,4 @@
-import launches from "./endpoints/launches";
+import launches from './endpoints/launches';
 
 export const api = {
   launches,

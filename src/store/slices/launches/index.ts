@@ -1,11 +1,11 @@
-import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { ILaunch, ILaunchesState } from "./types";
-import api from "../../../services";
-import { AxiosError } from "axios";
-import { IErrorResponse } from "../../../types/index";
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { ILaunch, ILaunchesState } from './types';
+import api from '../../../services';
+import { AxiosError } from 'axios';
+import { IErrorResponse } from '../../../types/index';
 
 export const fetchLauchesAsync = createAsyncThunk(
-  "launches/fetchLaunches",
+  'launches/fetchLaunches',
   async function (_, { rejectWithValue }) {
     try {
       const response = await api.launches.getLaunches();
@@ -41,12 +41,12 @@ const initialState: ILaunchesState = {
 };
 
 const launchesSlice = createSlice({
-  name: "launches",
+  name: 'launches',
   initialState,
   reducers: {
     sortLaunches: (state, action: PayloadAction<string>) => {
       state.data = state.data.sort((a, b) => {
-        const direction = action.payload === "desc" ? 1 : -1;
+        const direction = action.payload === 'desc' ? 1 : -1;
         const keyA = a.date_utc;
         const keyB = b.date_utc;
         if (keyA < keyB) {
@@ -64,13 +64,10 @@ const launchesSlice = createSlice({
       .addCase(fetchLauchesAsync.pending, (state) => {
         state.loading = true;
       })
-      .addCase(
-        fetchLauchesAsync.fulfilled,
-        (state, action: PayloadAction<ILaunch[]>) => {
-          state.data = action.payload;
-          state.loading = false;
-        }
-      )
+      .addCase(fetchLauchesAsync.fulfilled, (state, action: PayloadAction<ILaunch[]>) => {
+        state.data = action.payload;
+        state.loading = false;
+      })
       .addCase(fetchLauchesAsync.rejected, (state) => {
         state.loading = false;
       });
