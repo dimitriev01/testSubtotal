@@ -1,4 +1,4 @@
-import { ILaunch } from '../../store/slices/launches/types';
+import { ILaunch } from '../../types/launches';
 import style from './style.module.scss';
 
 interface LaunchProps {
@@ -12,7 +12,7 @@ const Launch: React.FC<LaunchProps> = ({ launch }) => {
       <div>Date: {new Date(launch.date_utc).toLocaleDateString()}</div>
       <div>Details: {launch.details}</div>
       <div>
-        <img src={launch.links.patch.small} alt="image" />
+        <img src={launch.links.patch.small} alt="no image" />
       </div>
     </div>
   );

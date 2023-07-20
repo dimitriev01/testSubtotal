@@ -1,34 +1,21 @@
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { fetchLauchesAsync, sortLaunches } from '../../store/slices/launches';
+import { useState } from 'react';
 import Launch from '../launch/Launch';
 import style from './style.module.scss';
 import Select, { SingleValue } from 'react-select';
-import { ISelectOption } from 'types';
+import { launchesApi } from '../../services/launches';
+import { ISelectOption, SortDirection, variantsSort } from '../../types';
+import { useFilterLaunches } from '../../hooks/launchesHooks';
 
 const ListLaunches = () => {
-  const dispatch = useAppDispatch();
-  const { data, loading } = useAppSelector((state) => state.launches);
-  const launches = { data };
-  const variantsSort: ISelectOption[] = [
-    { name: 'По возрастанию', value: 'asc' },
-    { name: 'По убыванию', value: 'desc' },
-  ];
   const [sortOption, setSortOption] = useState<SingleValue<ISelectOption>>(variantsSort[1]);
+  const { data: launches, isLoading, error } = launchesApi.useGetLaunchesQuery([]);
+  const filtredLaunches = useFilterLaunches((sortOption && sortOption.value) as SortDirection);
 
-  const handleSortFilterChange = (option: SingleValue<ISelectOption>) => {
-    if (option && sortOption && option.value !== sortOption.value) {
-      dispatch(sortLaunches(option.value));
-    }
-  };
+  if (error) return <div className={style.message}>Error</div>;
 
-  useEffect(() => {
-    dispatch(fetchLauchesAsync());
-  }, []);
+  if (isLoading) return <div className={style.message}>Loading launches...</div>;
 
-  if (loading) return <div className={style.message}>Loading launches...</div>;
-
-  if (!launches.data.length) return <div className={style.message}>No launches</div>;
+  if (launches && !launches.length) return <div className={style.message}>No launches</div>;
 
   return (
     <>
@@ -40,13 +27,12 @@ const ListLaunches = () => {
           getOptionLabel={(option) => option.name}
           onChange={(option) => {
             setSortOption(option);
-            handleSortFilterChange(option);
           }}
           isSearchable={false}
         />
       </div>
       <div className={style.launches}>
-        {launches.data.map((launch) => (
+        {filtredLaunches.map((launch) => (
           <Launch key={launch.name} launch={launch} />
         ))}
       </div>
