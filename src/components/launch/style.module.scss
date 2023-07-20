@@ -1,19 +1,25 @@
 .launchItem {
   padding: 10px;
   max-width: 350px;
-  margin: 10px;
+  margin: 10px 10px 10px 0;
   text-align: center;
   border: 1px solid;
   border-radius: 10px;
   background-color: #005aff45;
 
-  & > div:not(:last-of-type) {
+  &>div:not(:last-of-type) {
     margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 780px) {
+  .launchItem {
+    max-width: 100%;
   }
 }
 
 @media screen and (max-width: 425px) {
   .launchItem {
-    margin: 5px;
+    margin: 5px 5px 5px 0;
   }
 }

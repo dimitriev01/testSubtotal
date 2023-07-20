@@ -1,21 +1,22 @@
 import { useState } from 'react';
-import Launch from '../launch/Launch';
+import Launch from '../Launch';
 import style from './style.module.scss';
 import Select, { SingleValue } from 'react-select';
 import { launchesApi } from '../../services/launches';
 import { ISelectOption, SortDirection, variantsSort } from '../../types';
-import { useFilterLaunches } from '../../hooks/launchesHooks';
+import { useFilterLaunches } from '../../hooks/launches';
 
 const ListLaunches = () => {
   const [sortOption, setSortOption] = useState<SingleValue<ISelectOption>>(variantsSort[1]);
-  const { data: launches, isLoading, error } = launchesApi.useGetLaunchesQuery([]);
+  const { isLoading, error } = launchesApi.useGetLaunchesQuery([]);
   const filtredLaunches = useFilterLaunches((sortOption && sortOption.value) as SortDirection);
 
   if (error) return <div className={style.message}>Error</div>;
 
-  if (isLoading) return <div className={style.message}>Loading launches...</div>;
+  if (isLoading && !filtredLaunches)
+    return <div className={style.message}>Loading launches...</div>;
 
-  if (launches && !launches.length) return <div className={style.message}>No launches</div>;
+  if (!filtredLaunches?.length) return <div className={style.message}>No launches</div>;
 
   return (
     <>
@@ -32,8 +33,8 @@ const ListLaunches = () => {
         />
       </div>
       <div className={style.launches}>
-        {filtredLaunches.map((launch) => (
-          <Launch key={launch.name} launch={launch} />
+        {[].map((launch) => (
+          <Launch key={1} launch={launch} />
         ))}
       </div>
     </>
