@@ -33,8 +33,8 @@ const ListLaunches = () => {
         />
       </div>
       <div className={style.launches}>
-        {[].map((launch) => (
-          <Launch key={1} launch={launch} />
+        {filtredLaunches.map((launch) => (
+          <Launch key={launch.name} launch={launch} />
         ))}
       </div>
     </>
