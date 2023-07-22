@@ -7,7 +7,7 @@ interface LaunchProps {
 
 const Launch: React.FC<LaunchProps> = ({ launch }) => {
   return (
-    <div className={style.launchItem}>
+    <div role="menuitem" className={style.launchItem}>
       <div>Name: {launch.name}</div>
       <div>Date: {new Date(launch.date_utc).toLocaleDateString()}</div>
       <div>Details: {launch.details}</div>

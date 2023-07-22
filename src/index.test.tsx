@@ -1,46 +1,51 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { useGetLaunchesQuery } from './services/launches';
+import { Wrapper } from './utils/test.utils';
+import fetchMock from 'jest-fetch-mock';
 
-test('useGetLaunchesQuery hook returns expected data', async () => {
-  const { result } = renderHook(() => useGetLaunchesQuery([]));
+beforeEach(() => {
+  fetchMock.resetMocks();
+});
 
-  await waitFor(() => result.current.data);
+describe('useGetLaunchesQuery', () => {
+  const endpointName = 'getLaunches';
+  const data = {};
 
-  expect(
-    result.current.data
-      ?.sort((a, b) => {
-        const keyA = new Date(a.date_utc).getTime();
-        const keyB = new Date(b.date_utc).getTime();
-        if (keyA < keyB) {
-          return 1;
-        }
-        if (keyA > keyB) {
-          return -1;
-        }
-        return 0;
+  beforeEach(() => {
+    fetchMock.mockOnceIf('https://api.spacexdata.com/v5/launches', () =>
+      Promise.resolve({
+        status: 200,
+        body: JSON.stringify({ data }),
       })
-      .slice(2)
-  ).toEqual([
-    {
-      name: 'FalconSat',
-      date_utc: '2006-03-24T22:30:00.000Z',
-      details: 'Engine failure at 33 seconds and loss of vehicle',
-      links: {
-        patch: {
-          small: 'https://images2.imgbox.com/94/f2/NN6Ph45r_o.png',
-        },
-      },
-    },
-    {
-      name: 'DemoSat',
-      date_utc: '2007-03-21T01:10:00.000Z',
-      details:
-        'Successful first stage burn and transition to second stage, maximum altitude 289 km, Premature engine shutdown at T+7 min 30 s, Failed to reach orbit, Failed to recover first stage',
-      links: {
-        patch: {
-          small: 'https://images2.imgbox.com/f9/4a/ZboXReNb_o.png',
-        },
-      },
-    },
-  ]);
+    );
+  });
+
+  it('renders RTK hook', async () => {
+    const { result } = renderHook(() => useGetLaunchesQuery([]), {
+      wrapper: Wrapper,
+    });
+
+    expect(result.current).toMatchObject({
+      status: 'pending',
+      endpointName,
+      isLoading: true,
+      isSuccess: false,
+      isError: false,
+      isFetching: true,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    expect(fetchMock).toBeCalledTimes(1);
+
+    expect(result.current).toMatchObject({
+      status: 'fulfilled',
+      endpointName,
+      data,
+      isLoading: false,
+      isSuccess: true,
+      isError: false,
+      currentData: data,
+      isFetching: false,
+    });
+  });
 });
